@@ -23,6 +23,7 @@ export default class App extends Component<Props, State> {
     }
 }
 
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
