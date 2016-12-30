@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import {observable} from "mobx";
+import {observer} from "mobx-react/native";
 import {
     StyleSheet,
     Text,
@@ -14,8 +16,7 @@ export default class App extends Component<Props, State> {
         return (
             <View style={styles.container}>
                 <Text style={styles.text}>
-                    Welcome to React Nattie!!
-                    Yey!
+                    Welcome to React Native!
                 </Text>
             </View>
         );
