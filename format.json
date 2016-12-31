@@ -1,0 +1,24 @@
+
+{
+  "title": "how to take a photo",
+  "photo": "./1-primary.png",
+  "articles": [
+    {
+      "title": "title",
+      "summary": "text",
+      "small-photo": "./img/1.smal.png",
+      "main-photo": "./img/1.png",
+      "content": [
+        {
+          "type": "IMG",
+          "path": "./img/1.2.png"
+        },
+        {
+          "type": "TXT",
+          "dir?": "ltr|rtl",
+          "path": "here is some explanation."
+        }
+      ]
+    }
+  ]
+}

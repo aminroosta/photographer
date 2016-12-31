@@ -1,32 +1,23 @@
 import React, { Component } from 'react';
 import {observable} from "mobx";
 import {observer} from "mobx-react/native";
+import ImgCircle from "./img-circle";
 import {
     StyleSheet,
     Text,
-    Button,
     View
 } from 'react-native';
 
 interface Props { }
-
 interface State { }
-
 export default class App extends Component<Props, State> {
-    state = {
-      message: 'Hello'
-    };
-    add = () => {
-      this.state.message += '!';
-      this.setState(this.state);
-    }
     render() {
         return (
             <View style={styles.container}>
                 <Text style={styles.text}>
-                    {this.state.message} Welcome to React Native!
+                    Welcome to React Native!
                 </Text>
-                <Button title="me" onPress={this.add}></Button>
+                <ImgCircle width={160} height={160} />
             </View>
         );
     }
