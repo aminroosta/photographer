@@ -6,7 +6,7 @@ declare module 'react-native-svg' {
       fillOpacity?: number | string,
       stroke?: string,
       strokeOpacity?: number | string,
-      strokeWidth?: string,
+      strokeWidth?: string | number,
       strokeDasharray?: [number],
       strokeDashoffset?: number | string,
       x?: number | string,
