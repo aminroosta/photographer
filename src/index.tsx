@@ -17,7 +17,7 @@ export default class App extends Component<Props, State> {
                 <Text style={styles.text}>
                     Welcome to React Native!
                 </Text>
-                <ImgCircle width={160} height={160} />
+                <ImgCircle radius={80} />
             </View>
         );
     }

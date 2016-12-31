@@ -13,7 +13,8 @@
     "mobx": "^2.7.0",
     "mobx-react": "^4.0.4",
     "react": "15.4.1",
-    "react-native": "0.39.2"
+    "react-native": "0.39.2",
+    "react-native-svg": "^4.4.1"
   },
   "devDependencies": {
     "babel-jest": "18.0.0",
