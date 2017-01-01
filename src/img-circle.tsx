@@ -22,22 +22,26 @@ import Svg,{
     Stop
 } from 'react-native-svg';
 
-
 interface Props {
   radius: number,
+  source?: any,
   stroke?: string,
-  hideInnerCircle?: boolean
+  hideInnerCircle?: boolean,
+  style: React.ViewStyle
 }
 export default class ImgCircle extends Component<Props, {}> {
     render() {
+        const source = this.props.source;
         const radius = this.props.radius || 50;
         const radius2 = Math.min(radius*0.87, radius - 5);
         const stroke = this.props.stroke || "#FF5D61";
         return (
           <View
           style={{
+            // borderWidth: 1,
             width: radius*2,
             height: radius*2,
+            ...this.props.style
           }}
           >
             <Svg width={radius*2} height={radius*2}>
@@ -66,16 +70,18 @@ export default class ImgCircle extends Component<Props, {}> {
                         fill="none"/>
                     }
             </Svg>
+
               <Image
               style={{
-                marginTop: -2*radius*0.9,
-                marginLeft: 2*radius*0.1,
+                position: 'relative',
+                top: -2*radius*0.9,
+                left: 2*radius*0.1,
                 width: 2*radius*0.8,
                 height: 2*radius*0.8,
                 borderRadius: radius*0.8,
-                overflow: 'visible'
+                overflow: 'hidden'
               }}
-              source={require('../assets/images/topics/1.jpg')} >
+              source={source} >
 
               </Image>
           </View>

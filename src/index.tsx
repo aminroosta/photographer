@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import {observable, action} from "mobx";
 import {observer} from "mobx-react/native";
 import ImgCircle from "./img-circle";
+import Curves from "./curves";
+import Dimensions from 'Dimensions';
+import Topics from "./topics";
 import {
     StyleSheet,
     Text,
@@ -9,12 +12,8 @@ import {
     View
 } from 'react-native';
 
-class AppState {
-  @observable radius = 80;
-  smaller = () => {
-    this.radius = this.radius - 5;
-  }
-}
+class AppState { }
+
 @observer
 export default class App extends Component<{}, AppState> {
     state = new AppState();
@@ -22,11 +21,10 @@ export default class App extends Component<{}, AppState> {
         const model = this.state;
         return (
             <View style={styles.container}>
+                <Topics />
                 <Text style={styles.text}>
                     Welcome to React Native!
                 </Text>
-                <ImgCircle radius={model.radius} />
-                <Button title='smaller' onPress={model.smaller} />
             </View>
         );
     }

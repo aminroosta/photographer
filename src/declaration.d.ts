@@ -13,12 +13,22 @@ declare module 'react-native-svg' {
       y?: number | string,
       rotate?: number | string,
       scale?: number | string,
+      scaleX?: number | string,
+      scaleY?: number | string,
       originX?: string | number,
       originY?: string | number,
       origin?: string,
       cx?: string | number,
       cy?: string | number,
       r?:string | number,
+      id?: string,
+      d?: string,
+      x1?: string | number,
+      x2?: string | number,
+      y1?: string | number,
+      y2?: string | number,
+      href?: string,
+      style?: React.ViewStyle
   }
   export default class Svg extends React.Component<SvgProps, any>  { }
   export class Circle extends React.Component<SvgProps, any>  { }
@@ -35,5 +45,19 @@ declare module 'react-native-svg' {
   export class Text extends React.Component<SvgProps, any>  { }
   export class Use extends React.Component<SvgProps, any>  { }
   export class Defs extends React.Component<SvgProps, any>  { }
-  export class Stop extends React.Component<SvgProps, any>  { }
+
+  export class Stop extends React.Component<{
+    offset?: string | number,
+    stopColor: string,
+    stopOpacity?: string | number
+  }, any>  { }
+
+}
+
+declare module 'Dimensions' {
+    export default class Dimensions {
+      width: number;
+      height: number;
+      static get: (key:string) => Dimensions;
+    }
 }
