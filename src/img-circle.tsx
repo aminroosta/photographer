@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {
     StyleSheet,
+    Image,
     View
 } from 'react-native';
 import Svg,{
@@ -30,10 +31,15 @@ interface Props {
 export default class ImgCircle extends Component<Props, {}> {
     render() {
         const radius = this.props.radius || 50;
-        const radius2 = Math.min(radius*0.9, radius - 5);
+        const radius2 = Math.min(radius*0.87, radius - 5);
         const stroke = this.props.stroke || "#FF5D61";
         return (
-          <View>
+          <View
+          style={{
+            width: radius*2,
+            height: radius*2,
+          }}
+          >
             <Svg width={radius*2} height={radius*2}>
                   <Circle
                     cx={radius}
@@ -60,6 +66,18 @@ export default class ImgCircle extends Component<Props, {}> {
                         fill="none"/>
                     }
             </Svg>
+              <Image
+              style={{
+                marginTop: -2*radius*0.9,
+                marginLeft: 2*radius*0.1,
+                width: 2*radius*0.8,
+                height: 2*radius*0.8,
+                borderRadius: radius*0.8,
+                overflow: 'visible'
+              }}
+              source={require('../assets/images/topics/1.jpg')} >
+
+              </Image>
           </View>
         );
     }
