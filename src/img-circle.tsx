@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import {
     StyleSheet,
     Image,
-    View
+    View,
+    Animated,
 } from 'react-native';
 import Svg,{
     Circle,
@@ -27,7 +28,6 @@ interface Props {
   source?: any,
   stroke?: string,
   hideInnerCircle?: boolean,
-  style: React.ViewStyle
 }
 export default class ImgCircle extends Component<Props, {}> {
     render() {
@@ -37,13 +37,13 @@ export default class ImgCircle extends Component<Props, {}> {
         const stroke = this.props.stroke || "#FF5D61";
         return (
           <View
-          style={{
-            // borderWidth: 1,
-            width: radius*2,
-            height: radius*2,
-            ...this.props.style
-          }}
-          >
+            style={{
+              position: 'relative',
+              width: radius*2,
+              height: radius*2,
+              backgroundColor: 'transparent',
+              borderRadius: radius,
+            }}>
             <Svg width={radius*2} height={radius*2}>
                   <Circle
                     cx={radius}
@@ -72,18 +72,17 @@ export default class ImgCircle extends Component<Props, {}> {
             </Svg>
 
               <Image
-              style={{
-                position: 'relative',
-                top: -2*radius*0.9,
-                left: 2*radius*0.1,
-                width: 2*radius*0.8,
-                height: 2*radius*0.8,
-                borderRadius: radius*0.8,
-                overflow: 'hidden'
-              }}
-              source={source} >
+                style={{
+                  position: 'relative',
+                  top: -2*radius*0.9,
+                  left: 2*radius*0.1,
+                  borderRadius: radius*0.8,
+                  overflow: 'hidden',
+                  width: 2*radius*0.8,
+                  height: 2*radius*0.8,
+                }}
+                source={source} />
 
-              </Image>
           </View>
         );
     }

@@ -25,33 +25,43 @@ import Svg,{
 
 interface Props {
   width: number,
-  height?: number,
+  height: number,
+  count: number,
+  countLeft?: number,
+  countRight?: number,
+  marginLeft?: number
+}
+
+const d = (w: number, h: number, n: number, ext : number = 0) => {
+  const step = w/(2*n);
+  let ret = `M${0},${0} Q${step},${-h+1} ${2*step},0`;
+  for(let i = 1; i < n+ext; ++i)
+    ret += `T${2*(i+1)*step},0 `;
+  return ret; 
 }
 
 export default class Curves extends Component<Props, {}> {
     render() {
-      const {width, height=46} = this.props;
-      const scaleY = 1.3; // height/45;
-      const scaleX = (width/2)/184;
+      const { width: w, height: h, count: c,
+              countLeft: cl = 0,
+              countRight: cr = 0,
+              marginLeft: ml = 0
+            } = this.props;
         return (
           <View
             style={{
-              width, height,
-              borderWidth: 1
+              left: -w*cl/c
             }}>
-              <Svg width={width} height={height}>
+              <Svg width={w*(c+cr+cl)/c} height={h}>
                   <Symbol id="curve">
-                    <Path d="M184,19.5307225 C184,19.5307225 144.989249,70.5307225 90.9946238,19.5307225 C36.9999987,-31.4692775 0,33.5307225 0,33.5307225"
+                    <Path d={d(w, h, c, cl+cr)}
                       stroke="#FF5165"
                       strokeWidth="1"
                       fill="none"
-                      scaleY={scaleY}
-                      scaleX={scaleX}
-                      y={(height-46)/2}
+                      y={h/2}
                       />
                   </Symbol>
-                  <Use href="#curve" x={0} />
-                  <Use href="#curve" x={width/2} />
+                  <Use href="#curve" x={-w*ml/3} />
               </Svg>
           </View>
         );

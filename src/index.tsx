@@ -5,11 +5,12 @@ import ImgCircle from "./img-circle";
 import Curves from "./curves";
 import Dimensions from 'Dimensions';
 import Topics from "./topics";
+import TestPanResponder from './test-pan-responder';
 import {
     StyleSheet,
     Text,
     Button,
-    View
+    View,
 } from 'react-native';
 
 class AppState { }
