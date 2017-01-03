@@ -9,7 +9,7 @@ import { StyleSheet, Text, View, Animated, PanResponder, Easing} from 'react-nat
 var {height: deviceHeight, width} = Dimensions.get('window')
 
 class TopicsState {
-  @observable index = 1;
+  @observable index = 0;
   topics = [
     { source: null, title: null },
     { source: null, title: null },
@@ -41,63 +41,76 @@ export default class Topics extends Component<{}, {}> {
     state = new TopicsState();
     panResponder: React.PanResponderInstance = null;
     dims : {
-        rs :number[],
-        tops: Animated.AnimatedInterpolation[],
-        lefts: Animated.AnimatedInterpolation[],
+        tops: Animated.Value[],
+        lefts: Animated.Value[],
         scales: Animated.Value[]
        } = null;
-   left : Animated.Value | Animated.AnimatedInterpolation | number;
+   dxa : Animated.Value; // horizontal swipe
+   dxv : number; // horizontal swipe value
 
     componentWillMount() {
       const r1 = this.radius,
             r2 = r1*3/5,
             r3 = r1*2/5;
 
-      const left = this.left = new Animated.Value(0);
-      let left_value = 0;
-      left.addListener(({value}) => left_value = value);
+      let dxv = this.dxv = 0;
+      const dxa = this.dxa = new Animated.Value(0);
+      dxa.addListener(({value}) => { dxv = this.dxv = value; });
 
-      const lefts = [ 0, width/5, width/2, width*4/5, width];
       const h = this.height;
+      const lefts = [ 0, width/5, width/2, width*4/5, width, width*6/5];
+      const scales = [.4,.6,1,.6,.4,.6];
+      const tops = [0, h*.65, h*.5, h*0.35, h, h*.35];
       this.dims = {
-          rs : [r3, r2, r1, r2, r3],
-          tops : [0, h*.65, h*.5, h*0.35, h],
-          lefts : [ 0, width/5, width/2, width*4/5, width].map(v => new Animated.Value(v)),
-          scales: [.4,.6,1,.6,.4].map(v => new Animated.Value(v))
+          tops : tops.map(t => new Animated.Value(t)),
+          lefts : lefts.map(v => new Animated.Value(v)),
+          scales: scales.map(v => new Animated.Value(v))
       };
 
       this.panResponder = PanResponder.create({
         onMoveShouldSetPanResponderCapture: () => true,
         onPanResponderGrant: (e,gs) => {
-          left.setOffset(left_value);
-          left.setValue(0);
+          dxa.setOffset(dxv);
+          dxa.setValue(0);
         },
         onPanResponderMove:(e,{dx}) => Animated.event([
           null,
-          {dx: left}
+          {dx: dxa}
         ])(e, {dx: dx/2}),
         onPanResponderRelease: () => {
-          if(left_value > 0) {
-            Animated.timing(left, {
-              toValue: 0,
-              duration: (left_value/width)*700,
-              easing: Easing.linear
-            }).start();
-          }
-          else {
-            const inx = closestIndex(left_value*-1, lefts);
-            left.flattenOffset();
-            Animated.timing(left, {
-              toValue: -lefts[inx],
-              duration: 300,
-              easing: Easing.linear
-            }).start();
-            for(let i = inx; i < this.dims.scales.length; ++i)
-              Animated.timing(this.dims.scales[i], {
-                toValue: this.dims.rs[i-inx]/this.dims.rs[i],
-                duration: 300
-              }).start();
-          }
+            let inx = closestIndex(width/2, lefts.map(v => v+dxv));
+            dxa.flattenOffset();
+            if(this.state.index === 0 && inx < 2) { inx = 2; }
+
+            const offset = width/2 - lefts[inx];
+            Animated.spring(dxa, { toValue: offset, }).start(
+              () => {
+
+                
+                const left_animations = this.dims.lefts
+                .map((lft,i) =>
+                  Animated.spring(lft, { toValue: lefts[i - inx + 2] - offset})
+                ).filter((lft,i) => (i -inx + 2) >= 0);
+                
+                const scale_animations = this.dims.scales.map(
+                  (scl,i) => Animated.spring(scl,{ toValue: scales[i+2-inx]})
+                ).filter((lft,i) => (i -inx + 2) >= 0);
+
+                Animated.parallel([...left_animations, ...scale_animations]).start(
+                  () => {
+                    const offset = (inx - 2);
+                    const new_index = offset + this.state.index;
+                    if(false && new_index >= 0 &&  new_index < this.state.topics.length - 2) {
+                      this.state.index = new_index;
+                      this.dims.scales.forEach((s,i) => s.setValue(scales[i]));
+                      this.dims.lefts.forEach((l,i) => l.setValue(lefts[i]));
+                      dxa.setValue(0);
+                    }
+                  }
+                );
+                return false;
+              }
+            );
         }
       });
     }
@@ -105,21 +118,21 @@ export default class Topics extends Component<{}, {}> {
         const {state: model, dims} = this;
 
         const images = model.topics
-          .filter((e,inx) => model.index <= inx && inx < model.index+5)
+          .filter((e,inx) => model.index <= inx && inx < model.index+6)
           .map((topic, inx) => <Animated.View
                                     key={model.index + inx}
                                     style={{
                                       position: 'absolute',
                                       transform: [
-                                        {translateX: -dims.rs[inx]},
-                                        {translateY: -dims.rs[inx]},
-                                        //{scale: this.dims.scales[inx]},
+                                        {translateX: -this.radius},
+                                        {translateY: -this.radius},
+                                        {scale: this.dims.scales[inx]},
                                       ],
                                       left: dims.lefts[inx],
                                       top: dims.tops[inx]}}>
               
                                   <ImgCircle
-                                      radius={dims.rs[inx]}
+                                      radius={this.radius}
                                       source={model.topics[model.index+inx].source}
                                       /* TODO: pass title to ImgCircle*//>
                                 </Animated.View>);
@@ -129,9 +142,9 @@ export default class Topics extends Component<{}, {}> {
               <Animated.View style={{
                   top: (2*this.radius-this.height)/2,
                   width:width*2,
-                  left: this.left,
+                  left: this.dxa,
                 }}>
-                  <Curves width={width} height={this.height} count={3} marginLeft={-1/2} countRight={2} countLeft={1} />
+                <Curves width={width} height={this.height} count={3} marginLeft={-1/2} countRight={2} countLeft={1} />
                   {images}
               </Animated.View>
             </View>
