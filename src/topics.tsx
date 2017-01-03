@@ -20,6 +20,8 @@ class TopicsState {
     { source: require('../assets/images/topics/5.jpg'), title: 'very long verbose title 5'},
     { source: require('../assets/images/topics/6.jpg'), title: 'yet another title 6' },
     { source: require('../assets/images/topics/7.jpg'), title: 'last title 7'},
+    { source: require('../assets/images/topics/8.jpg'), title: 'last title 8'},
+    { source: require('../assets/images/topics/9.jpg'), title: 'last title 9'},
     { source: null, title: null },
     { source: null, title: null },
   ];
@@ -58,11 +60,28 @@ export default class Topics extends Component<{}, {}> {
       dxa.addListener(({value}) => { dxv = this.dxv = value; });
 
       const h = this.height;
-      const lefts = [ 0, width/5, width/2, width*4/5, width, width*6/5];
-      const scales = [.4,.6,1,.6,.4,.6];
-      const tops = [0, h*.65, h*.5, h*0.35, h, h*.35];
+      let lefts = [ 0, width/5, width/2, width*4/5];
+      lefts = [...lefts, ...lefts.map(l => l + width), ...lefts.map(l => l+2*width), ...lefts.map(l => l+3*width)];
+      let scales = [.4,.6,1,.6];
+      scales = [...scales, ...scales, ...scales, ...scales];
+      //const tops = [0, h*.65, h*.5, h*0.35, h, h*.35];
+      const tops = [
+        [0, h*.65, h*.5, h*0.35, h],
+        [0, h, h*0.5, h*.35, h*.65],
+        [0, h*.5, h*.5, 0, h, ],
+        [h*.5, h*.35, h, 0, h*.65],
+        [h*.35, h*.5, h*.65, 0, h],
+        [h*.5, h*.35, h, 0, h*.5,],
+
+        [0, h*.65, h*.5, h*0.35, h],
+        [0, h, h*0.5, h*.35, h*.65],
+        [0, h*.5, h*.5, 0, h, ],
+        [h*.5, h*.35, h, 0, h*.65],
+        [h*.35, h*.5, h*.65, 0, h],
+        [0, h*.5, h*.5, h*.35, h],
+      ]
       this.dims = {
-          tops : tops.map(t => new Animated.Value(t)),
+          tops : tops[0].map(t => new Animated.Value(t)),
           lefts : lefts.map(v => new Animated.Value(v)),
           scales: scales.map(v => new Animated.Value(v))
       };
@@ -95,8 +114,12 @@ export default class Topics extends Component<{}, {}> {
                 const scale_animations = this.dims.scales.map(
                   (scl,i) => Animated.spring(scl,{ toValue: scales[i+2-inx]})
                 ).filter((lft,i) => (i -inx + 2) >= 0);
+                
+                const top_animations = this.dims.tops.map(
+                  (top,i) => Animated.spring(top, { toValue: tops[inx-2][i]})
+                );
 
-                Animated.parallel([...left_animations, ...scale_animations]).start(
+                Animated.parallel([...left_animations, ...scale_animations, ...top_animations]).start(
                   () => {
                     const offset = (inx - 2);
                     const new_index = offset + this.state.index;
@@ -118,7 +141,7 @@ export default class Topics extends Component<{}, {}> {
         const {state: model, dims} = this;
 
         const images = model.topics
-          .filter((e,inx) => model.index <= inx && inx < model.index+6)
+          .filter((e,inx) => model.index <= inx && inx < model.index+11)
           .map((topic, inx) => <Animated.View
                                     key={model.index + inx}
                                     style={{
@@ -129,7 +152,7 @@ export default class Topics extends Component<{}, {}> {
                                         {scale: this.dims.scales[inx]},
                                       ],
                                       left: dims.lefts[inx],
-                                      top: dims.tops[inx]}}>
+                                      top: dims.tops[inx%5]}}>
               
                                   <ImgCircle
                                       radius={this.radius}
@@ -144,7 +167,7 @@ export default class Topics extends Component<{}, {}> {
                   width:width*2,
                   left: this.dxa,
                 }}>
-                <Curves width={width} height={this.height} count={3} marginLeft={-1/2} countRight={2} countLeft={1} />
+                <Curves width={width} height={this.height} count={3} marginLeft={-1/2} countRight={6} countLeft={1} />
                   {images}
               </Animated.View>
             </View>
