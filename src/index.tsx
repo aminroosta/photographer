@@ -6,6 +6,7 @@ import Curves from "./curves";
 import Dimensions from 'Dimensions';
 import Topics from "./topics";
 import TestPanResponder from './test-pan-responder';
+import MyScrollView from './my-scroll-vew';
 import GlTest from './gl-test';
 import {
     StyleSheet,
@@ -21,9 +22,11 @@ export default class App extends Component<{}, AppState> {
     state = new AppState();
     render() {
         const model = this.state;
+        const {height: deviceHeight, width: deviceWidth} = Dimensions.get('window');
         return (
             <View style={styles.container}>
-                <Topics />
+                <View style={{flex: 1}} />
+                <MyScrollView height={deviceHeight/4} width={deviceWidth}/>
                 <Text style={styles.text}>
                     Welcome to React Native!
                 </Text>
@@ -41,6 +44,7 @@ const styles = StyleSheet.create({
     } as React.ViewStyle,
 
     text: {
+        flex: 1,
         fontSize: 20,
         textAlign: 'center',
         margin: 10,

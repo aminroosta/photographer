@@ -28,6 +28,7 @@ interface Props {
   source?: any,
   stroke?: string,
   hideInnerCircle?: boolean,
+  style?: any
 }
 export default class ImgCircle extends Component<Props, {}> {
     render() {
@@ -36,13 +37,14 @@ export default class ImgCircle extends Component<Props, {}> {
         const radius2 = Math.min(radius*0.87, radius - 5);
         const stroke = this.props.stroke || "#FF5D61";
         return (
-          <View
+          <Animated.View
             style={{
               position: 'relative',
               width: radius*2,
               height: radius*2,
               backgroundColor: 'transparent',
               borderRadius: radius,
+              ...this.props.style
             }}>
             <Svg width={radius*2} height={radius*2}>
                   <Circle
@@ -83,7 +85,7 @@ export default class ImgCircle extends Component<Props, {}> {
                 }}
                 source={source} />
 
-          </View>
+          </Animated.View>
         );
     }
 }
