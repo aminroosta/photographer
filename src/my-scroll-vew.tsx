@@ -25,6 +25,7 @@ interface Topic {
     dx_center: Animated.Value;
     left: Animated.AnimatedInterpolation;
     top: Animated.AnimatedInterpolation;
+    elevation: Animated.AnimatedInterpolation;
     source: any;
     title: string;
 }
@@ -41,10 +42,15 @@ const constructTopics = (height: number, width: number) : Topic[] => {
         });
         const top = dx_center.interpolate({
             inputRange: [-1, -.85, -.65, -.3, .3, .65, .85, 1],
-            outputRange: [-r/2, -r/3, r/5, r/3, -r/3, -r/5, r/3, r/2],
+            outputRange: [-r/2, -r/3, r/4, r/3, -r/3, -r/4, r/3, r/2],
             easing: Easing.linear
         });
-        return {...s, scale, dx_center, left, top};
+        const elevation = dx_center.interpolate({
+            inputRange: [-1, 0, 1],
+            outputRange: [0, 30, 0],
+            easing: Easing.linear
+        });
+        return {...s, scale, dx_center, left, top, elevation};
     });
     return topics;
 }
@@ -68,7 +74,7 @@ export default class Topics extends Component<Props, {}> {
             <View style={{height: h, width: w}}>
                 <Curves style={{
                         position: 'absolute',
-                        top: h/4
+                        top: h/4,
                     }}
                     width={w} height={h/2}
                     count={3} marginLeft={1/2}
@@ -121,7 +127,10 @@ export default class Topics extends Component<Props, {}> {
                 marginHorizontal: -10,
                 position: 'relative',
                 left: t.left,
-                top: t.top
+                top: t.top,
+                elevation: t.source ? t.elevation : 0,
+                marginBottom: 60,
+                marginTop: 5,
             }}
             key={inx}
             source={t.source}
