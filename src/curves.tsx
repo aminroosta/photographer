@@ -29,7 +29,8 @@ interface Props {
   count: number,
   countLeft?: number,
   countRight?: number,
-  marginLeft?: number
+  marginLeft?: number,
+  style?: React.ViewStyle
 }
 
 const d = (w: number, h: number, n: number, ext : number = 0) => {
@@ -50,7 +51,8 @@ export default class Curves extends Component<Props, {}> {
         return (
           <View
             style={{
-              left: -w*cl/c
+              left: -w*cl/c,
+              ...this.props.style
             }}>
               <Svg width={w*(c+cr+cl)/c} height={h}>
                   <Symbol id="curve">

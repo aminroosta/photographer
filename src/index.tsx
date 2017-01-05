@@ -26,7 +26,7 @@ export default class App extends Component<{}, AppState> {
         return (
             <View style={styles.container}>
                 <View style={{flex: 1}} />
-                <MyScrollView height={deviceHeight/4} width={deviceWidth}/>
+                <MyScrollView height={deviceHeight/6} width={deviceWidth}/>
                 <Text style={styles.text}>
                     Welcome to React Native!
                 </Text>
