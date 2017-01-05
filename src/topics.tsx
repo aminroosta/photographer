@@ -22,6 +22,20 @@ class TopicsState {
     { source: require('../assets/images/topics/7.jpg'), title: 'last title 7'},
     { source: require('../assets/images/topics/8.jpg'), title: 'last title 8'},
     { source: require('../assets/images/topics/9.jpg'), title: 'last title 9'},
+    { source: require('../assets/images/topics/10.jpg'), title: 'last title 9'},
+    { source: require('../assets/images/topics/11.jpg'), title: 'last title 9'},
+    { source: require('../assets/images/topics/12.jpg'), title: 'last title 9'},
+    { source: require('../assets/images/topics/13.jpg'), title: 'last title 9'},
+    { source: require('../assets/images/topics/14.jpg'), title: 'good tiles 4' },
+    { source: require('../assets/images/topics/15.jpg'), title: 'very long verbose title 5'},
+    { source: require('../assets/images/topics/16.jpg'), title: 'yet another title 6' },
+    { source: require('../assets/images/topics/17.jpg'), title: 'last title 7'},
+    { source: require('../assets/images/topics/18.jpg'), title: 'last title 8'},
+    { source: require('../assets/images/topics/19.jpg'), title: 'last title 9'},
+    { source: require('../assets/images/topics/20.jpg'), title: 'last title 9'},
+    { source: require('../assets/images/topics/21.jpg'), title: 'last title 9'},
+    { source: require('../assets/images/topics/22.jpg'), title: 'last title 9'},
+    { source: require('../assets/images/topics/23.jpg'), title: 'last title 9'},
     { source: null, title: null },
     { source: null, title: null },
   ];
@@ -60,26 +74,27 @@ export default class Topics extends Component<{}, {}> {
       dxa.addListener(({value}) => { dxv = this.dxv = value; });
 
       const h = this.height;
-      let lefts = [ 0, width/5, width/2, width*4/5];
-      lefts = [...lefts, ...lefts.map(l => l + width), ...lefts.map(l => l+2*width), ...lefts.map(l => l+3*width)];
-      let scales = [.4,.6,1,.6];
-      scales = [...scales, ...scales, ...scales, ...scales];
-      //const tops = [0, h*.65, h*.5, h*0.35, h, h*.35];
+      let lefts: number[] = [];
+      let scales: number[] = [];
+      [0, 1, 2, 3, 4, 5, 6, 7, 8].forEach(i =>  {
+        lefts.push(...[ 0, width/5, width/2, width*4/5].map(e => e+i*width))
+        scales.push(...[.4,.6,1,.6]);
+      });
       const tops = [
-        [0, h*.65, h*.5, h*0.35, h],
-        [0, h, h*0.5, h*.35, h*.65],
-        [0, h*.5, h*.5, 0, h, ],
-        [h*.5, h*.35, h, 0, h*.65],
-        [h*.35, h*.5, h*.65, 0, h],
-        [h*.5, h*.35, h, 0, h*.5,],
+        [0,   .65, .5, .35, 1  ],
+        [0,   1,   .5, .35, .65],
+        [0,   .5,  .5,  0,  1  ],
+        [.5,  .35, 1,   0,  .65],
+        [.35, .5,  .65, 0,  1  ],
+        [0,   .35, .5, .35, 1  ],
 
-        [0, h*.65, h*.5, h*0.35, h],
-        [0, h, h*0.5, h*.35, h*.65],
-        [0, h*.5, h*.5, 0, h, ],
-        [h*.5, h*.35, h, 0, h*.65],
-        [h*.35, h*.5, h*.65, 0, h],
-        [0, h*.5, h*.5, h*.35, h],
-      ]
+        [.65, .65, 1, 0, .35],
+        [1, 0, .65, .5, .35],
+        [0, .5, .5, 0, 1 ],
+        [.5, .35, 1, 0, .65],
+        [.35, .5, .65, 0, 1],
+        [0, .5, .5, .35, 1],
+      ].map(arr => arr.map(e => e*h));
       this.dims = {
           tops : tops[0].map(t => new Animated.Value(t)),
           lefts : lefts.map(v => new Animated.Value(v)),
@@ -102,36 +117,37 @@ export default class Topics extends Component<{}, {}> {
             if(this.state.index === 0 && inx < 2) { inx = 2; }
 
             const offset = width/2 - lefts[inx];
-            Animated.spring(dxa, { toValue: offset, }).start(
+            //.start( () => {
+                // 67, 182,270, 411, 523, 586
+                
+            const left_animations = this.dims.lefts
+            .map((lft,i) =>
+              Animated.spring(lft, { toValue: lefts[i - inx + 2] - offset})
+            ).filter((lft,i) => (i -inx + 2) >= 0);
+            
+            const scale_animations = this.dims.scales.map(
+              (scl,i) => Animated.spring(scl,{ toValue: scales[i+2-inx]})
+            ).filter((lft,i) => (i -inx + 2) >= 0);
+            
+            const top_animations = this.dims.tops.map(
+              (top,i) => Animated.spring(top, { toValue: tops[inx-2][i]})
+            );
+
+            Animated.parallel([
+              Animated.spring(dxa, { toValue: offset, }),
+              ...left_animations,
+              ...scale_animations,
+              ...top_animations
+            ]).start(
               () => {
-
-                
-                const left_animations = this.dims.lefts
-                .map((lft,i) =>
-                  Animated.spring(lft, { toValue: lefts[i - inx + 2] - offset})
-                ).filter((lft,i) => (i -inx + 2) >= 0);
-                
-                const scale_animations = this.dims.scales.map(
-                  (scl,i) => Animated.spring(scl,{ toValue: scales[i+2-inx]})
-                ).filter((lft,i) => (i -inx + 2) >= 0);
-                
-                const top_animations = this.dims.tops.map(
-                  (top,i) => Animated.spring(top, { toValue: tops[inx-2][i]})
-                );
-
-                Animated.parallel([...left_animations, ...scale_animations, ...top_animations]).start(
-                  () => {
-                    const offset = (inx - 2);
-                    const new_index = offset + this.state.index;
-                    if(false && new_index >= 0 &&  new_index < this.state.topics.length - 2) {
-                      this.state.index = new_index;
-                      this.dims.scales.forEach((s,i) => s.setValue(scales[i]));
-                      this.dims.lefts.forEach((l,i) => l.setValue(lefts[i]));
-                      dxa.setValue(0);
-                    }
-                  }
-                );
-                return false;
+                const offset = (inx - 2);
+                const new_index = offset + this.state.index;
+                if(false && new_index >= 0 &&  new_index < this.state.topics.length - 2) {
+                  this.state.index = new_index;
+                  this.dims.scales.forEach((s,i) => s.setValue(scales[i]));
+                  this.dims.lefts.forEach((l,i) => l.setValue(lefts[i]));
+                  dxa.setValue(0);
+                }
               }
             );
         }
@@ -141,7 +157,7 @@ export default class Topics extends Component<{}, {}> {
         const {state: model, dims} = this;
 
         const images = model.topics
-          .filter((e,inx) => model.index <= inx && inx < model.index+11)
+          .filter((e,inx) => model.index <= inx)
           .map((topic, inx) => <Animated.View
                                     key={model.index + inx}
                                     style={{
@@ -167,7 +183,7 @@ export default class Topics extends Component<{}, {}> {
                   width:width*2,
                   left: this.dxa,
                 }}>
-                <Curves width={width} height={this.height} count={3} marginLeft={-1/2} countRight={6} countLeft={1} />
+                <Curves width={width} height={this.height} count={3} marginLeft={-1/2} countRight={8} countLeft={1} />
                   {images}
               </Animated.View>
             </View>

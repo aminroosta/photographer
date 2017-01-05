@@ -6,6 +6,7 @@ import Curves from "./curves";
 import Dimensions from 'Dimensions';
 import Topics from "./topics";
 import TestPanResponder from './test-pan-responder';
+import GlTest from './gl-test';
 import {
     StyleSheet,
     Text,
@@ -22,7 +23,7 @@ export default class App extends Component<{}, AppState> {
         const model = this.state;
         return (
             <View style={styles.container}>
-                <Topics />
+                <GlTest />
                 <Text style={styles.text}>
                     Welcome to React Native!
                 </Text>
