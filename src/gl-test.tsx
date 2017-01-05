@@ -10,7 +10,8 @@ const shaders = Shaders.create({
         varying vec2 uv;
         uniform sampler2D t;
         void main() {
-            gl_FragColor = texture2D(t, uv);
+            float dist = (uv.x - .5)*(uv.x - .5) + (uv.y - .5)*(uv.y - .5);
+            gl_FragColor = dist < .25 ? texture2D(t, uv) : vec4(0);
         }`
     },
 });

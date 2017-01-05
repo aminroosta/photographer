@@ -23,7 +23,7 @@ export default class App extends Component<{}, AppState> {
         const model = this.state;
         return (
             <View style={styles.container}>
-                <GlTest />
+                <Topics />
                 <Text style={styles.text}>
                     Welcome to React Native!
                 </Text>
