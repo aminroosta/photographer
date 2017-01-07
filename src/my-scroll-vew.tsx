@@ -30,24 +30,24 @@ interface Topic {
     title: string;
 }
 
-const constructTopics = (height: number, width: number) : Topic[] => {
-    const r = (height-1)/2 | 0;
+const constructTopics = (height: number, width: number, r: number) : Topic[] => {
     const topics = sources.map((s,i) => {
         const scale = new Animated.Value(0);
         const dx_center = new Animated.Value(0);
         const left = dx_center.interpolate({
-            inputRange: [-1, -.7, -.2, 0, .2, .7,  1],
-            outputRange: [0, 0, -r/4, 0, +r/4, 0, 0],
+            inputRange: [-1, -.7, -.4, 0, .4, .7,  1],
+            outputRange: [0, 0, -r/3, 0, +r/3, 0, 0],
             easing: Easing.linear
         });
+        const top_input = [-1, -.9, -.8, -.7, -.6, -.5, -.4, -.3, -.2, -.1,  0, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1];
         const top = dx_center.interpolate({
-            inputRange: [-1, -.85, -.65, -.3, .3, .65, .85, 1],
-            outputRange: [-r/2, -r/3, r/4, r/3, -r/3, -r/4, r/3, r/2],
+            inputRange:  top_input,
+        outputRange: top_input.map(i => -r*.8*Math.cos(1.6*(i-.3)*Math.PI) + r*.1),
             easing: Easing.linear
         });
-        const elevation = dx_center.interpolate({
-            inputRange: [-1, 0, 1],
-            outputRange: [0, 30, 0],
+        const elevation = scale.interpolate({
+            inputRange: [.4, 1],
+            outputRange: [0, 15],
             easing: Easing.linear
         });
         return {...s, scale, dx_center, left, top, elevation};
@@ -63,18 +63,21 @@ interface Props {
 export default class Topics extends Component<Props, {}> {
     topics: Topic[] = null;
     
+    get r() {
+        return (this.props.height-1)*.3 | 0;
+    }
+    
     componentWillMount() {
-        this.topics = constructTopics(this.props.height, this.props.width);
+        this.topics = constructTopics(this.props.height, this.props.width, this.r);
         this.updateScales(0);
     }
     render() {
         const {height : h, width: w} = this.props;
-        const r = (h-1)/2 | 0;
         return (
             <View style={{height: h, width: w}}>
                 <Curves style={{
                         position: 'absolute',
-                        top: h/4,
+                        top: h*.22,
                     }}
                     width={w} height={h/2}
                     count={3} marginLeft={1/2}
@@ -87,6 +90,7 @@ export default class Topics extends Component<Props, {}> {
                     scrollEventThrottle={15}
                     style={{
                         position: 'absolute',
+                        height: h,
                     }}>
                         {this.renderCircles()}
                 </ScrollView>
@@ -100,8 +104,8 @@ export default class Topics extends Component<Props, {}> {
     }
 
     updateScales(x: number) {
-        let r =  (this.props.height-1)/2 | 0;
-        r -= 10;
+        let r =  this.r;
+        r -= this.r/5;
         const W = this.props.width;
         const center = W/2 + x;
 
@@ -121,20 +125,25 @@ export default class Topics extends Component<Props, {}> {
     }
     
     renderCircles() {
-        const r = (this.props.height-1)/2 | 0;
         return this.topics.map((t,inx) => <ImgCircle
             style={{ 
                 transform: [{scale: t.scale}],
-                marginHorizontal: -10,
+                marginHorizontal: -this.r/5,
                 position: 'relative',
                 left: t.left,
                 top: t.top,
                 elevation: t.source ? t.elevation : 0,
-                marginBottom: 60,
-                marginTop: 5,
+                shadowColor: "#000000",
+                shadowOpacity: t.source ? t.scale.interpolate({
+                    inputRange: [.4, 1],
+                    outputRange: [0, .35]
+                }) : 0,
+                shadowRadius: this.r/4,
+                shadowOffset: { height: this.r/4, width: 0 },
+                marginTop: this.r/2
             }}
             key={inx}
             source={t.source}
-            radius={r} />);
+            radius={this.r} />);
     }
 }
