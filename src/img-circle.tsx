@@ -3,6 +3,7 @@ import {
     StyleSheet,
     Image,
     View,
+    Text,
     Animated,
 } from 'react-native';
 import Svg,{
@@ -17,13 +18,13 @@ import Svg,{
     Polyline,
     Rect,
     Symbol,
-    Text,
     Use,
     Defs,
     Stop
 } from 'react-native-svg';
 
 interface Props {
+  title: string,
   radius: number,
   source?: any,
   stroke?: string,
@@ -39,40 +40,42 @@ export default class ImgCircle extends Component<Props, {}> {
         return (
           <Animated.View
             style={{
-              position: 'relative',
-              width: radius*2,
-              height: radius*2,
               backgroundColor: 'transparent',
               borderRadius: radius,
-              ...this.props.style
+              ...this.props.style,
             }}>
-            <Svg width={radius*2} height={radius*2}>
-                  <Circle
-                    cx={radius}
-                    cy={radius}
-                    originX={radius}
-                    originY={radius}
-                    r={radius-1}
-                    rotate={8}
-                    stroke={stroke}
-                    strokeWidth={2}
-                    strokeDasharray={[1,2,7,4]}
-                    fill="none"/>
-                    { this.props.hideInnerCircle ? null :
-                      <Circle
-                        cx={radius}
-                        cy={radius}
-                        originX={radius}
-                        originY={radius}
-                        r={radius2}
-                        strokeOpacity={0.45}
-                        stroke={stroke}
-                        strokeWidth={2}
-                        strokeDasharray={[1,2,7,4]}
-                        fill="none"/>
-                    }
-            </Svg>
-
+            <View style={{
+              position: 'relative',
+              backgroundColor: 'transparent',
+              width: radius*2,
+              height: radius*2,
+              }}>
+              <Svg width={radius*2} height={radius*2}>
+                    <Circle
+                      cx={radius}
+                      cy={radius}
+                      originX={radius}
+                      originY={radius}
+                      r={radius-1}
+                      rotate={8}
+                      stroke={stroke}
+                      strokeWidth={2}
+                      strokeDasharray={[1,2,7,4]}
+                      fill="none"/>
+                      { this.props.hideInnerCircle ? null :
+                        <Circle
+                          cx={radius}
+                          cy={radius}
+                          originX={radius}
+                          originY={radius}
+                          r={radius2}
+                          strokeOpacity={0.45}
+                          stroke={stroke}
+                          strokeWidth={2}
+                          strokeDasharray={[1,2,7,4]}
+                          fill="none"/>
+                      }
+              </Svg>
               <Image
                 style={{
                   position: 'relative',
@@ -84,6 +87,19 @@ export default class ImgCircle extends Component<Props, {}> {
                   height: 2*radius*0.8,
                 }}
                 source={source} />
+
+            </View>
+            <Text
+              style={{
+                position: 'absolute',
+                fontSize: 11,
+                color: 'black',
+                textAlign: 'center',
+                top: radius*2,
+                width: 2*radius,
+                fontFamily: 'iransans'
+              }}
+            >{this.props.title}</Text>
 
           </Animated.View>
         );

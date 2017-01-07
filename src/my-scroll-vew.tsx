@@ -7,15 +7,16 @@ import Curves from "./curves";
 const sources = [
     { source: null, title: null },
     { source: null, title: null },
-    { source: require('../assets/images/topics/1.jpg'), title: 'title 1' },
-    { source: require('../assets/images/topics/2.jpg'), title: 'title 2'},
-    { source: require('../assets/images/topics/3.jpg'), title: 'long title 3' },
-    { source: require('../assets/images/topics/4.jpg'), title: 'good tiles 4' },
-    { source: require('../assets/images/topics/5.jpg'), title: 'very long verbose title 5'},
-    { source: require('../assets/images/topics/6.jpg'), title: 'yet another title 6' },
-    { source: require('../assets/images/topics/7.jpg'), title: 'last title 7'},
-    { source: require('../assets/images/topics/8.jpg'), title: 'last title 8'},
-    { source: require('../assets/images/topics/9.jpg'), title: 'last title 9'},
+    { source: require('../assets/images/topics/1.jpg'), title: 'عکاسی چیست' },
+    { source: require('../assets/images/topics/2.jpg'), title: 'نکات ابتدایی عکاسی دیجیتال'},
+    { source: require('../assets/images/topics/3.jpg'), title: 'شناخت انواع دوربین ها' },
+    { source: require('../assets/images/topics/4.jpg'), title: 'شناخت انواع لنز ها' },
+    { source: require('../assets/images/topics/5.jpg'), title: 'شناخت انواع تجهیزات'},
+    { source: require('../assets/images/topics/6.jpg'), title: 'کار با دوربین' },
+    { source: require('../assets/images/topics/7.jpg'), title: 'کنترل نوردهی'},
+    { source: require('../assets/images/topics/8.jpg'), title: 'کنترل عمق میدان'},
+    { source: require('../assets/images/topics/9.jpg'), title: 'ترکیب بندی'},
+    { source: require('../assets/images/topics/10.jpg'), title: 'last item'},
     { source: null, title: null },
     { source: null, title: null },
 ]
@@ -39,10 +40,10 @@ const constructTopics = (height: number, width: number, r: number) : Topic[] => 
             outputRange: [0, 0, -r/3, 0, +r/3, 0, 0],
             easing: Easing.linear
         });
-        const top_input = [-1, -.9, -.8, -.7, -.6, -.5, -.4, -.3, -.2, -.1,  0, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1];
+        const top_input = [-1, -.9, -.8, -.7, -.6, -.5, -.4, -.3, -.2, -.1, 0, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1];
         const top = dx_center.interpolate({
             inputRange:  top_input,
-        outputRange: top_input.map(i => -r*.8*Math.cos(1.6*(i-.3)*Math.PI) + r*.1),
+            outputRange: top_input.map(i => -r*.7*Math.cos(1.6*(i-.3)*Math.PI) -r*.1),
             easing: Easing.linear
         });
         const elevation = scale.interpolate({
@@ -64,7 +65,7 @@ export default class Topics extends Component<Props, {}> {
     topics: Topic[] = null;
     
     get r() {
-        return (this.props.height-1)*.3 | 0;
+        return (this.props.height-1)*.25 | 0;
     }
     
     componentWillMount() {
@@ -77,9 +78,9 @@ export default class Topics extends Component<Props, {}> {
             <View style={{height: h, width: w}}>
                 <Curves style={{
                         position: 'absolute',
-                        top: h*.22,
+                        top: h*.25,
                     }}
-                    width={w} height={h/2}
+                    width={w} height={h*.4}
                     count={3} marginLeft={1/2}
                     countRight={1} countLeft={0}/>
                 <ScrollView
@@ -132,7 +133,6 @@ export default class Topics extends Component<Props, {}> {
                 position: 'relative',
                 left: t.left,
                 top: t.top,
-                elevation: t.source ? t.elevation : 0,
                 shadowColor: "#000000",
                 shadowOpacity: t.source ? t.scale.interpolate({
                     inputRange: [.4, 1],
@@ -143,6 +143,7 @@ export default class Topics extends Component<Props, {}> {
                 marginTop: this.r/2
             }}
             key={inx}
+            title={t.title}
             source={t.source}
             radius={this.r} />);
     }
