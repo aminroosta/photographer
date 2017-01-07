@@ -7,7 +7,6 @@ import Dimensions from 'Dimensions';
 import Topics from "./topics";
 import TestPanResponder from './test-pan-responder';
 import MyScrollView from './my-scroll-vew';
-import GlTest from './gl-test';
 import {
     StyleSheet,
     Text,
