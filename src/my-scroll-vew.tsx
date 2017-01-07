@@ -84,6 +84,7 @@ export default class Topics extends Component<Props, {}> {
                     onScroll={e => this.onScroll(e)}
                     automaticallyAdjustContentInsets={false}
                     showsHorizontalScrollIndicator={false}
+                    scrollEventThrottle={15}
                     style={{
                         position: 'absolute',
                     }}>

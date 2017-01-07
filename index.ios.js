@@ -1,7 +1,6 @@
 'use strict'
 
 import { AppRegistry } from 'react-native'
-import App from './build'
-import Flix from './build/flix'
+import App from './build/index.js'
 
-AppRegistry.registerComponent('photographer', () => Flix)
+AppRegistry.registerComponent('photographer', () => App)
