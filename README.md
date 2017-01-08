@@ -8,9 +8,9 @@ react-native run [platform]
 
 # Screens
 
-![Alt text](assets/screens/a.png=320x568?raw=true "Main Menu")
+<img src="assets/screens/a.png" alt="Main Menu" width="320" height="568">
 
-![Alt text](assets/screens/b.png=320x568?raw=true "Favs")
+<img src="assets/screens/b.png" alt="Favs" width="320" height="568">
 
-![Alt text](assets/screens/b.png=320x568?raw=true "Article")
+<img src="assets/screens/c.png" alt="Article" width="320" height="568">
 
